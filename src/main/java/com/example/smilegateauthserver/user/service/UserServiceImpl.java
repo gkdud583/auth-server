@@ -1,6 +1,7 @@
 package com.example.smilegateauthserver.user.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.smilegateauthserver.user.User;
 import com.example.smilegateauthserver.user.dto.RegisterRequest;
@@ -11,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
 
   @Override
+  @Transactional
   public void register(RegisterRequest request) {
     if (isDuplicatedEmail(request.getEmail())) {
       throw new IllegalArgumentException(ExceptionMessage.DUPLICATED_EMAIL.getMsg());
