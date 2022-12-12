@@ -1,5 +1,6 @@
 package com.example.smilegateauthserver.user.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
-
+  private final PasswordEncoder passwordEncoder;
   @Override
   @Transactional
   public void register(RegisterRequest request) {
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
     User user = User
         .builder()
         .email(request.getEmail())
-        .password(request.getPassword())
+        .password(passwordEncoder.encode(request.getPassword()))
         .build();
     userRepository.save(user);
   }
