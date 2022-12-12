@@ -1,4 +1,4 @@
-package com.example.smilegateauthserver.user.exception;
+package com.example.smilegateauthserver.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
