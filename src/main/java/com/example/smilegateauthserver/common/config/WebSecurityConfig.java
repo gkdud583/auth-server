@@ -33,6 +33,8 @@ public class WebSecurityConfig {
         .rememberMe()
           .disable()
         .logout()
+          .disable()
+        .sessionManagement()
           .disable();
     return http.build();
   }

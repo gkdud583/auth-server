@@ -19,3 +19,7 @@ spring:
       schema-locations:
         - classpath:sql/user/user_schema.sql
       mode: always
+
+jwt:
+  secret: ${JWT.SECRET}
+  expirationInMs: 1800000 #30분

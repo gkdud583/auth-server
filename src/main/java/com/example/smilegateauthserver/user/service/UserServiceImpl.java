@@ -34,12 +34,14 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void login(LoginRequest request) {
+  public User login(LoginRequest request) {
     User user = userRepository
         .findByEmail(request.getEmail())
         .orElseThrow(() -> new IllegalArgumentException(ExceptionMessage.NONEXISTENT_EMAIL.getMsg()));
 
     validatePassword(request.getPassword(), user.getPassword());
+
+    return user;
   }
 
   private void validatePassword(String password, String encodedPassword) {
