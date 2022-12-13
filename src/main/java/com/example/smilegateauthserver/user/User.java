@@ -1,5 +1,6 @@
 package com.example.smilegateauthserver.user;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,7 @@ public class User {
   @NotNull
   @NotBlank
   @Size(max = 255)
+  @Column(unique = true)
   private String email;
 
   @NotNull
@@ -35,5 +37,9 @@ public class User {
   ) {
     this.email = email;
     this.password = password;
+  }
+
+  public String getPassword() {
+    return password;
   }
 }

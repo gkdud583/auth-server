@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.smilegateauthserver.user.dto.LoginRequest;
+import com.example.smilegateauthserver.user.dto.LoginResponse;
 import com.example.smilegateauthserver.user.dto.RegisterRequest;
 import com.example.smilegateauthserver.user.service.UserService;
 
@@ -20,5 +22,15 @@ public class UserController {
   @PostMapping("register")
   public void register(@RequestBody @Valid RegisterRequest request) {
     userService.register(request);
+  }
+
+  @PostMapping("login")
+  public LoginResponse login(@RequestBody @Valid LoginRequest request) {
+    userService.login(request);
+
+    // jwt 토큰 생성해서 반환
+    return LoginResponse.builder()
+                        .token(null)
+                        .build();
   }
 }

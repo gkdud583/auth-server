@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.smilegateauthserver.user.User;
+import com.example.smilegateauthserver.user.dto.LoginRequest;
 import com.example.smilegateauthserver.user.dto.RegisterRequest;
 import com.example.smilegateauthserver.user.exception.ExceptionMessage;
 import com.example.smilegateauthserver.user.repository.UserRepository;
@@ -29,6 +30,21 @@ public class UserServiceImpl implements UserService {
         .password(passwordEncoder.encode(request.getPassword()))
         .build();
     userRepository.save(user);
+  }
+
+  @Override
+  public void login(LoginRequest request) {
+    User user = userRepository
+        .findByEmail(request.getEmail())
+        .orElseThrow(() -> new IllegalArgumentException(ExceptionMessage.NONEXISTENT_EMAIL.getMsg()));
+
+    validatePassword(request.getPassword(), user.getPassword());
+  }
+
+  private void validatePassword(String password, String encodedPassword) {
+    if (!passwordEncoder.matches(password, encodedPassword)) {
+      throw new IllegalArgumentException(ExceptionMessage.INCONSISTENT_PASSWORD.getMsg());
+    }
   }
 
   private boolean isDuplicatedEmail(String email) {
