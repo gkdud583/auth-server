@@ -5,6 +5,7 @@ import com.example.smilegateauthserver.user.User;
 import com.example.smilegateauthserver.user.dto.LoginRequest;
 import com.example.smilegateauthserver.user.dto.LoginResponse;
 import com.example.smilegateauthserver.user.dto.RegisterRequest;
+import com.example.smilegateauthserver.user.dto.UserResponse;
 import com.example.smilegateauthserver.user.service.UserService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -38,5 +39,13 @@ public class UserController {
     return LoginResponse.builder()
                         .token(token)
                         .build();
+  }
+
+  @GetMapping
+  public List<UserResponse> findAll() {
+    return userService.findAll()
+                      .stream()
+                      .map((user -> UserResponse.of(user.getId(), user.getEmail())))
+                      .collect(Collectors.toList());
   }
 }

@@ -10,4 +10,6 @@ public interface UserService {
   void register(RegisterRequest request);
 
   User login(LoginRequest request);
+
+  List<User> findAll();
 }

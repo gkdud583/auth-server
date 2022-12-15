@@ -45,6 +45,11 @@ public class UserServiceImpl implements UserService {
     return user;
   }
 
+  @Override
+  public List<User> findAll() {
+    return userRepository.findAll();
+  }
+
   private void validatePassword(String password, String encodedPassword) {
     if (!passwordEncoder.matches(password, encodedPassword)) {
       throw new IllegalArgumentException(ExceptionMessage.INCONSISTENT_PASSWORD.getMsg());
