@@ -1,12 +1,15 @@
 package com.example.smilegateauthserver.user.controller;
 
+import com.example.smilegateauthserver.common.annotation.LoginUser;
 import com.example.smilegateauthserver.common.auth.JwtProvider;
+import com.example.smilegateauthserver.common.util.CookieUtil;
 import com.example.smilegateauthserver.user.User;
-import com.example.smilegateauthserver.user.dto.LoginRequest;
-import com.example.smilegateauthserver.user.dto.LoginResponse;
-import com.example.smilegateauthserver.user.dto.RegisterRequest;
-import com.example.smilegateauthserver.user.dto.UserResponse;
+import com.example.smilegateauthserver.user.controller.dto.LoginRequest;
+import com.example.smilegateauthserver.user.controller.dto.LoginResponse;
+import com.example.smilegateauthserver.user.controller.dto.RegisterRequest;
+import com.example.smilegateauthserver.user.controller.dto.UserResponse;
 import com.example.smilegateauthserver.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,13 +34,16 @@ public class UserController {
   }
 
   @PostMapping("login")
-  public LoginResponse login(@RequestBody @Valid LoginRequest request) {
+  public LoginResponse login(@RequestBody @Valid LoginRequest request,
+    HttpServletResponse httpServletResponse) {
     User user = userService.login(request);
 
-    String token = jwtProvider.generateToken(user.getId(), user.getRole());
+    String accessToken = jwtProvider.generateAccessToken(user.getId(), user.getRole());
+    String refreshToken = jwtProvider.generateRefreshToken(user.getId(), user.getRole());
 
+    httpServletResponse.addCookie(CookieUtil.generateCookie("refreshToken", refreshToken));
     return LoginResponse.builder()
-                        .token(token)
+                        .token(accessToken)
                         .build();
   }
 

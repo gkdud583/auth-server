@@ -22,4 +22,5 @@ spring:
 
 jwt:
   secret: ${JWT.SECRET}
-  expirationInMs: 1800000 #30분
+  accessTokenExpirationInMs: 1800000 #30분
+  refreshTokenExpirationInMs: 7200000 #2시간

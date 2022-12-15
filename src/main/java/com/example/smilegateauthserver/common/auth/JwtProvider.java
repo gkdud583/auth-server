@@ -9,6 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
+import jakarta.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,21 +30,38 @@ public class JwtProvider {
 
   private Key key;
   private final String secret;
-  private final long expirationInMs;
+  private final long accessTokenExpirationInMs;
+  private final long refreshTokenExpirationInMs;
 
-  public String generateToken(long userId, User.Role role) {
+  @PostConstruct
+  public void afterConstruct() {
+    byte[] keyBytes = Decoders.BASE64.decode(secret);
+    key = Keys.hmacShaKeyFor(keyBytes);
+  }
+
+  public String generateAccessToken(long userId, User.Role role) {
     Map<String, Object> claims = new HashMap<>();
     claims.put("userId", userId);
     claims.put("authority", role.getName());
-
-    byte[] keyBytes = Decoders.BASE64.decode(secret);
-    key = Keys.hmacShaKeyFor(keyBytes);
 
     Date now = new Date();
     return Jwts.builder()
                .setClaims(claims)
                .setIssuedAt(new Date(now.getTime()))
-               .setExpiration(new Date(now.getTime() + expirationInMs))
+               .setExpiration(new Date(now.getTime() + accessTokenExpirationInMs))
+               .signWith(key, SignatureAlgorithm.HS256)
+               .compact();
+  }
+
+  public String generateRefreshToken(long userId, User.Role role) {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("userId", userId);
+
+    Date now = new Date();
+    return Jwts.builder()
+               .setClaims(claims)
+               .setIssuedAt(new Date(now.getTime()))
+               .setExpiration(new Date(now.getTime() + refreshTokenExpirationInMs))
                .signWith(key, SignatureAlgorithm.HS256)
                .compact();
   }
