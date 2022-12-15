@@ -1,19 +1,6 @@
 package com.example.smilegateauthserver.common.auth;
 
-import java.security.Key;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import com.example.smilegateauthserver.user.User;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -22,13 +9,24 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
+import java.security.Key;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @RequiredArgsConstructor
 @Slf4j
 @ConfigurationProperties(prefix = "jwt")
 public class JwtProvider {
+
   private Key key;
   private final String secret;
   private final long expirationInMs;
@@ -43,11 +41,11 @@ public class JwtProvider {
 
     Date now = new Date();
     return Jwts.builder()
-        .setClaims(claims)
-        .setIssuedAt(new Date(now.getTime()))
-        .setExpiration(new Date(now.getTime() + expirationInMs))
-        .signWith(key, SignatureAlgorithm.HS256)
-        .compact();
+               .setClaims(claims)
+               .setIssuedAt(new Date(now.getTime()))
+               .setExpiration(new Date(now.getTime() + expirationInMs))
+               .signWith(key, SignatureAlgorithm.HS256)
+               .compact();
   }
 
   public boolean validateToken(String token) {
@@ -66,7 +64,8 @@ public class JwtProvider {
 
   public Authentication getAuthentication(String token) {
     Claims claims = parseClaims(token);
-    Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority((String)claims.get("authority")));
+    Collection<? extends GrantedAuthority> authorities = Collections.singleton(
+      new SimpleGrantedAuthority((String) claims.get("authority")));
     return new JwtToken(claims.get("userId"), authorities);
   }
 

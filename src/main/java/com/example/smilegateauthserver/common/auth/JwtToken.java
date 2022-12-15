@@ -1,11 +1,11 @@
 package com.example.smilegateauthserver.common.auth;
 
 import java.util.Collection;
-
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
 public class JwtToken extends AbstractAuthenticationToken {
+
   private Object principal;
 
   public JwtToken(Object principal, Collection<? extends GrantedAuthority> authorities) {

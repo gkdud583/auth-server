@@ -6,5 +6,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public class ExceptionResponse {
+
   private final String message;
 }
