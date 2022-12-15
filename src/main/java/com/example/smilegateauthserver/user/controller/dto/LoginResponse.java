@@ -1,4 +1,4 @@
-package com.example.smilegateauthserver.user.dto;
+package com.example.smilegateauthserver.user.controller.dto;
 
 import lombok.Builder;
 import lombok.Getter;
