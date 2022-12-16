@@ -23,7 +23,7 @@ public class ExceptionController {
 
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ExceptionResponse handleMethodArgumentNotValidException(IllegalArgumentException e) {
+  public ExceptionResponse handleIllegalArgumentException(IllegalArgumentException e) {
     log.warn(e.getMessage());
     return new ExceptionResponse(e.getMessage());
   }
