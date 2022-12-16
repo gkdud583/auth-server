@@ -1,10 +1,13 @@
 package com.example.smilegateauthserver.user.service;
 
+import com.example.smilegateauthserver.common.auth.JwtProvider;
+import com.example.smilegateauthserver.common.auth.TokenStore;
 import com.example.smilegateauthserver.user.User;
-import com.example.smilegateauthserver.user.dto.LoginRequest;
-import com.example.smilegateauthserver.user.dto.RegisterRequest;
+import com.example.smilegateauthserver.user.controller.dto.LoginRequest;
+import com.example.smilegateauthserver.user.controller.dto.RegisterRequest;
 import com.example.smilegateauthserver.user.exception.ExceptionMessage;
 import com.example.smilegateauthserver.user.repository.UserRepository;
+import com.example.smilegateauthserver.user.service.dto.TokenResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +21,10 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+
+  private final JwtProvider jwtProvider;
+
+  private final TokenStore tokenStore;
 
   @Override
   @Transactional
@@ -35,14 +42,18 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User login(LoginRequest request) {
+  public TokenResponse login(LoginRequest request) {
     User user = userRepository
       .findByEmail(request.getEmail())
       .orElseThrow(() -> new IllegalArgumentException(ExceptionMessage.NONEXISTENT_EMAIL.getMsg()));
 
     validatePassword(request.getPassword(), user.getPassword());
 
-    return user;
+    String accessToken = jwtProvider.generateAccessToken(user.getId(), user.getRole());
+    String refreshToken = jwtProvider.generateRefreshToken(user.getId(), user.getRole());
+
+    tokenStore.set(user.getId(), refreshToken);
+    return TokenResponse.of(accessToken, refreshToken);
   }
 
   @Override

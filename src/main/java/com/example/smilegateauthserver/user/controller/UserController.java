@@ -1,7 +1,6 @@
 package com.example.smilegateauthserver.user.controller;
 
 import com.example.smilegateauthserver.common.annotation.LoginUser;
-import com.example.smilegateauthserver.common.auth.JwtProvider;
 import com.example.smilegateauthserver.common.util.CookieUtil;
 import com.example.smilegateauthserver.user.User;
 import com.example.smilegateauthserver.user.controller.dto.LoginRequest;
@@ -9,6 +8,7 @@ import com.example.smilegateauthserver.user.controller.dto.LoginResponse;
 import com.example.smilegateauthserver.user.controller.dto.RegisterRequest;
 import com.example.smilegateauthserver.user.controller.dto.UserResponse;
 import com.example.smilegateauthserver.user.service.UserService;
+import com.example.smilegateauthserver.user.service.dto.TokenResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserService userService;
-  private final JwtProvider jwtProvider;
 
   @PostMapping("register")
   public void register(@RequestBody @Valid RegisterRequest request) {
@@ -36,14 +35,11 @@ public class UserController {
   @PostMapping("login")
   public LoginResponse login(@RequestBody @Valid LoginRequest request,
     HttpServletResponse httpServletResponse) {
-    User user = userService.login(request);
-
-    String accessToken = jwtProvider.generateAccessToken(user.getId(), user.getRole());
-    String refreshToken = jwtProvider.generateRefreshToken(user.getId(), user.getRole());
-
-    httpServletResponse.addCookie(CookieUtil.generateCookie("refreshToken", refreshToken));
+    TokenResponse tokenResponse = userService.login(request);
+    httpServletResponse.addCookie(
+      CookieUtil.generateCookie("refreshToken", tokenResponse.getRefreshToken()));
     return LoginResponse.builder()
-                        .token(accessToken)
+                        .token(tokenResponse.getAccessToken())
                         .build();
   }
 

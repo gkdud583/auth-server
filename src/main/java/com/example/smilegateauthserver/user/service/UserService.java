@@ -1,15 +1,16 @@
 package com.example.smilegateauthserver.user.service;
 
 import com.example.smilegateauthserver.user.User;
-import com.example.smilegateauthserver.user.dto.LoginRequest;
-import com.example.smilegateauthserver.user.dto.RegisterRequest;
+import com.example.smilegateauthserver.user.controller.dto.LoginRequest;
+import com.example.smilegateauthserver.user.controller.dto.RegisterRequest;
+import com.example.smilegateauthserver.user.service.dto.TokenResponse;
 import java.util.List;
 
 public interface UserService {
 
   void register(RegisterRequest request);
 
-  User login(LoginRequest request);
+  TokenResponse login(LoginRequest request);
 
   List<User> findAll();
 }
