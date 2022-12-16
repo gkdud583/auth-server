@@ -1,6 +1,7 @@
 package com.example.smilegateauthserver.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,6 +18,14 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ExceptionResponse handleMethodArgumentNotValidException(
     MethodArgumentNotValidException e) {
+    log.warn(e.getMessage());
+    return new ExceptionResponse(e.getMessage());
+  }
+
+  @ExceptionHandler(RedisConnectionFailureException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public ExceptionResponse handleRedisConnectionFailureException(
+    RedisConnectionFailureException e) {
     log.warn(e.getMessage());
     return new ExceptionResponse(e.getMessage());
   }

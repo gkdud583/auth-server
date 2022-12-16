@@ -20,6 +20,11 @@ spring:
         - classpath:sql/user/user_schema.sql
       mode: always
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 jwt:
   secret: ${JWT.SECRET}
   accessTokenExpirationInMs: 1800000 #30분
