@@ -53,11 +53,12 @@ public class User {
 
   public static User of(String email, String password, Role role) {
     return User.builder()
-      .email(email)
-      .password(password)
-      .role(role)
-      .build();
+               .email(email)
+               .password(password)
+               .role(role)
+               .build();
   }
+
   @RequiredArgsConstructor
   @Getter
   public enum Role {

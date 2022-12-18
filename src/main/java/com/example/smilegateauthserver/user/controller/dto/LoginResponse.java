@@ -16,7 +16,7 @@ public class LoginResponse {
 
   public static LoginResponse from(String token) {
     return LoginResponse.builder()
-      .token(token)
-      .build();
+                        .token(token)
+                        .build();
   }
 }
