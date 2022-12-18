@@ -11,7 +11,7 @@ public class UserResponse {
   private final String email;
 
   @Builder(access = AccessLevel.PRIVATE)
-  public UserResponse(long id, String email) {
+  private UserResponse(long id, String email) {
     this.id = id;
     this.email = email;
   }

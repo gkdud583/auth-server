@@ -1,5 +1,7 @@
 package com.example.smilegateauthserver.user.controller.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,7 +10,7 @@ public class RefreshTokenResponse {
 
   private String token;
 
-  @Builder
+  @Builder(access = PRIVATE)
   private RefreshTokenResponse(String token) {
     this.token = token;
   }

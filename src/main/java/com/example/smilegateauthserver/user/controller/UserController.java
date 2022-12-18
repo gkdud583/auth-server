@@ -42,9 +42,7 @@ public class UserController {
     HttpServletResponse httpServletResponse) {
     TokenResponse tokenResponse = userService.login(request);
     setRefreshTokenCookie(httpServletResponse, tokenResponse.getRefreshToken());
-    return LoginResponse.builder()
-                        .token(tokenResponse.getAccessToken())
-                        .build();
+    return LoginResponse.from(tokenResponse.getAccessToken());
   }
 
   @PostMapping("logout")

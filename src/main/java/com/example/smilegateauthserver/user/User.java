@@ -40,8 +40,8 @@ public class User {
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @Builder
-  public User(
+  @Builder(access = AccessLevel.PRIVATE)
+  private User(
     String email,
     String password,
     Role role
@@ -51,6 +51,13 @@ public class User {
     this.role = role;
   }
 
+  public static User of(String email, String password, Role role) {
+    return User.builder()
+      .email(email)
+      .password(password)
+      .role(role)
+      .build();
+  }
   @RequiredArgsConstructor
   @Getter
   public enum Role {

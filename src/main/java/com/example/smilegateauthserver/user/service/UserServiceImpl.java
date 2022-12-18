@@ -36,12 +36,9 @@ public class UserServiceImpl implements UserService {
     if (isDuplicatedEmail(request.getEmail())) {
       throw new IllegalArgumentException(ExceptionMessage.DUPLICATED_EMAIL.getMsg());
     }
-    User user = User
-      .builder()
-      .email(request.getEmail())
-      .password(passwordEncoder.encode(request.getPassword()))
-      .role(User.Role.USER)
-      .build();
+    User user = User.of(request.getEmail(), passwordEncoder.encode(request.getPassword()),
+      Role.USER);
+
     userRepository.save(user);
   }
 
