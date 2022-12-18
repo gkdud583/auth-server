@@ -1,8 +1,11 @@
 package com.example.smilegateauthserver.user.service;
 
+import static com.example.smilegateauthserver.user.exception.ExceptionMessage.NOTFOUND_USER;
+
 import com.example.smilegateauthserver.common.auth.JwtProvider;
 import com.example.smilegateauthserver.common.auth.TokenStore;
 import com.example.smilegateauthserver.user.User;
+import com.example.smilegateauthserver.user.User.Role;
 import com.example.smilegateauthserver.user.controller.dto.LoginRequest;
 import com.example.smilegateauthserver.user.controller.dto.RegisterRequest;
 import com.example.smilegateauthserver.user.exception.ExceptionMessage;
@@ -10,6 +13,7 @@ import com.example.smilegateauthserver.user.repository.UserRepository;
 import com.example.smilegateauthserver.user.service.dto.TokenResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +64,23 @@ public class UserServiceImpl implements UserService {
   public void logout(long userId) {
     tokenStore.remove(userId);
   }
+
+  @Override
+  public TokenResponse refreshToken(String token) {
+    jwtProvider.validateToken(token);
+    Authentication authentication = jwtProvider.getAuthentication(token);
+    long userId = Long.valueOf(String.valueOf(authentication.getPrincipal()));
+    if (!userRepository.existsById(userId)) {
+      throw new IllegalArgumentException(NOTFOUND_USER.getMsg());
+    }
+
+    String accessToken = jwtProvider.generateAccessToken(userId, Role.USER);
+    String refreshToken = jwtProvider.generateRefreshToken(userId, Role.USER);
+
+    tokenStore.set(userId, refreshToken);
+    return TokenResponse.of(accessToken, refreshToken);
+  }
+
   @Override
   public List<User> findAll() {
     return userRepository.findAll();

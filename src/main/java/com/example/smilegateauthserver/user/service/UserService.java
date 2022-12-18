@@ -13,5 +13,8 @@ public interface UserService {
   TokenResponse login(LoginRequest request);
 
   void logout(long userId);
+
+  TokenResponse refreshToken(String token);
+
   List<User> findAll();
 }

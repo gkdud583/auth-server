@@ -40,13 +40,9 @@ public class JwtProvider {
   }
 
   public String generateAccessToken(long userId, User.Role role) {
-    Map<String, Object> claims = new HashMap<>();
-    claims.put("userId", userId);
-    claims.put("authority", role.getName());
-
     Date now = new Date();
     return Jwts.builder()
-               .setClaims(claims)
+               .setClaims(createClaims(userId, role))
                .setIssuedAt(new Date(now.getTime()))
                .setExpiration(new Date(now.getTime() + accessTokenExpirationInMs))
                .signWith(key, SignatureAlgorithm.HS256)
@@ -54,12 +50,9 @@ public class JwtProvider {
   }
 
   public String generateRefreshToken(long userId, User.Role role) {
-    Map<String, Object> claims = new HashMap<>();
-    claims.put("userId", userId);
-
     Date now = new Date();
     return Jwts.builder()
-               .setClaims(claims)
+               .setClaims(createClaims(userId, role))
                .setIssuedAt(new Date(now.getTime()))
                .setExpiration(new Date(now.getTime() + refreshTokenExpirationInMs))
                .signWith(key, SignatureAlgorithm.HS256)
@@ -93,5 +86,12 @@ public class JwtProvider {
     } catch (ExpiredJwtException e) {
       return e.getClaims();
     }
+  }
+
+  private Map<String, Object> createClaims(long userId, User.Role role) {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("userId", userId);
+    claims.put("authority", role.getName());
+    return claims;
   }
 }

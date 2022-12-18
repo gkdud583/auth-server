@@ -32,6 +32,8 @@ public class WebSecurityConfig {
         .permitAll()
         .requestMatchers(HttpMethod.POST, "/api/v1/users/login")
         .permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/v1/users/token/refresh")
+        .permitAll()
         .requestMatchers(HttpMethod.GET, "/api/v1/users")
         .hasRole("ADMIN")
         .anyRequest()
