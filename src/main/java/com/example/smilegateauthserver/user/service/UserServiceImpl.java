@@ -57,6 +57,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public void logout(long userId) {
+    tokenStore.remove(userId);
+  }
+  @Override
   public List<User> findAll() {
     return userRepository.findAll();
   }

@@ -12,5 +12,6 @@ public interface UserService {
 
   TokenResponse login(LoginRequest request);
 
+  void logout(long userId);
   List<User> findAll();
 }

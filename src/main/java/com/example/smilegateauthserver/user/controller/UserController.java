@@ -43,6 +43,10 @@ public class UserController {
                         .build();
   }
 
+  @PostMapping("logout")
+  public void logout(@LoginUser User user) {
+    userService.logout(user.getId());
+  }
   @GetMapping
   public List<UserResponse> findAll() {
     return userService.findAll()
