@@ -22,9 +22,6 @@ public class TokenStore {
     valueOperations.set(String.valueOf(key), value, Duration.ofSeconds(duration));
   }
 
-  public String get(long key) {
-    ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-    return valueOperations.get(key);
   public void remove(long key) {
     redisTemplate.delete(String.valueOf(key));
   }
