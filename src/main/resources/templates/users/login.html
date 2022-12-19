@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+  .fieldError {
+    border-color: #bd2130;
+  } </style>
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+  <form role="form" action="/api/v1/users/login" id="loginForm" method="post" onSubmit="return false;">
+    <div class="form-group">
+      <label>이메일</label>
+      <input type="text" class="form-control email" placeholder="이메일을 입력하세요">
+    </div>
+    <div class="form-group">
+      <label>비밀번호</label>
+      <input type="password" class="form-control password" placeholder="비밀번호를 입력하세요"> </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <br/>
+  <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+<script src="/js/login.js"></script>
+</body>
+</html>
