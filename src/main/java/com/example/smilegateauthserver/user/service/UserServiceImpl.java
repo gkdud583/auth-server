@@ -11,6 +11,7 @@ import com.example.smilegateauthserver.user.controller.dto.RegisterRequest;
 import com.example.smilegateauthserver.user.exception.ExceptionMessage;
 import com.example.smilegateauthserver.user.repository.UserRepository;
 import com.example.smilegateauthserver.user.service.dto.TokenResponse;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -91,5 +92,11 @@ public class UserServiceImpl implements UserService {
 
   private boolean isDuplicatedEmail(String email) {
     return userRepository.existsByEmail(email);
+  }
+
+  @PostConstruct
+  public void createAdmin() {
+    User user = User.of("admin", passwordEncoder.encode("admin123"), Role.ADMIN);
+    userRepository.save(user);
   }
 }
