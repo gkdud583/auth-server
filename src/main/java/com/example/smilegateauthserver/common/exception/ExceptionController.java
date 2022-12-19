@@ -18,7 +18,7 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ExceptionResponse handleMethodArgumentNotValidException(
     MethodArgumentNotValidException e) {
-    log.warn(e.getMessage());
+    log.warn("handleMethodArgumentNotValidException: {}", e);
     return new ExceptionResponse(e.getMessage());
   }
 
@@ -26,14 +26,14 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ExceptionResponse handleRedisConnectionFailureException(
     RedisConnectionFailureException e) {
-    log.warn(e.getMessage());
+    log.warn("handleRedisConnectionFailureException: {}", e);
     return new ExceptionResponse(e.getMessage());
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ExceptionResponse handleIllegalArgumentException(IllegalArgumentException e) {
-    log.warn(e.getMessage());
+    log.warn("handleIllegalArgumentException: {}", e);
     return new ExceptionResponse(e.getMessage());
   }
 }
