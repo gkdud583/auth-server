@@ -68,12 +68,12 @@ public class UserServiceImpl implements UserService {
     jwtProvider.validateToken(token);
     Authentication authentication = jwtProvider.getAuthentication(token);
     long userId = Long.valueOf(String.valueOf(authentication.getPrincipal()));
-    if (!userRepository.existsById(userId)) {
-      throw new IllegalArgumentException(NOTFOUND_USER.getMsg());
-    }
 
-    String accessToken = jwtProvider.generateAccessToken(userId, Role.USER);
-    String refreshToken = jwtProvider.generateRefreshToken(userId, Role.USER);
+    User user = userRepository.findById(userId).orElseThrow(
+      () -> new IllegalArgumentException(NOTFOUND_USER.getMsg()));
+
+    String accessToken = jwtProvider.generateAccessToken(userId, user.getRole());
+    String refreshToken = jwtProvider.generateRefreshToken(userId, user.getRole());
 
     tokenStore.set(userId, refreshToken);
     return TokenResponse.of(accessToken, refreshToken);
